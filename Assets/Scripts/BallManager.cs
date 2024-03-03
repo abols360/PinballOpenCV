@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResetBallPosition : MonoBehaviour
+public class BallManager : MonoBehaviour
 {
     private Vector2 ballPosition;
     // Start is called before the first frame update
