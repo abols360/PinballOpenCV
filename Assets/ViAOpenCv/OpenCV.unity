@@ -1411,7 +1411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Surface: {fileID: 1757097894}
   ImageFlip: -1
-  Threshold: 100
+  Threshold: 99
   ShowProcesingImage: 0
   CurvedAccuracy: 10
   MinArea: 5000

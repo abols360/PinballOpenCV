@@ -9,6 +9,7 @@ using OpenCvSharp;
 public class FoundObjects : WebCamera
 {
     [SerializeField] private FlipMode ImageFlip;
+    [SerializeField] private int blur = 5;
     [SerializeField] private float Threshold = 100f;
     [SerializeField] private bool ShowProcesingImage = true;
     [SerializeField] private float CurvedAccuracy = 10f;
@@ -29,6 +30,7 @@ public class FoundObjects : WebCamera
 
         Cv2.Flip(image, image, ImageFlip);   //1
         Cv2.CvtColor(image, processImage, ColorConversionCodes.BGR2GRAY);  //2
+        Cv2.Blur(processImage, processImage, new Size(blur, blur)); // Apply average blur
         Cv2.Threshold(processImage, processImage, Threshold, 255, ThresholdTypes.BinaryInv);   //3
         Cv2.FindContours(processImage, out contours, out hierachy, RetrievalModes.Tree, ContourApproximationModes.ApproxSimple, null);  //4
 
