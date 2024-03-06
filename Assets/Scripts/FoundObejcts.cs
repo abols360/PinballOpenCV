@@ -9,6 +9,7 @@ using OpenCvSharp;
 public class FoundObjects : WebCamera
 {
     [SerializeField] private FlipMode ImageFlip;
+    [SerializeField] private int blur = 5;
     [SerializeField] private float Threshold = 100f;
     [SerializeField] private bool ShowProcesingImage = true;
     [SerializeField] private float CurvedAccuracy = 10f;
@@ -27,17 +28,18 @@ public class FoundObjects : WebCamera
      //  throw new System.NotImplementedException();
         image = OpenCvSharp.Unity.TextureToMat(input);
 
-        Cv2.Flip(image, image, ImageFlip);
-        Cv2.CvtColor(image, processImage, ColorConversionCodes.BGR2GRAY);
-        Cv2.Threshold(processImage, processImage, Threshold, 255, ThresholdTypes.BinaryInv);
-        Cv2.FindContours(processImage, out contours, out hierachy, RetrievalModes.Tree, ContourApproximationModes.ApproxSimple, null);
+        Cv2.Flip(image, image, ImageFlip);   //1
+        Cv2.CvtColor(image, processImage, ColorConversionCodes.BGR2GRAY);  //2
+        Cv2.Blur(processImage, processImage, new Size(blur, blur)); // Apply average blur
+        Cv2.Threshold(processImage, processImage, Threshold, 255, ThresholdTypes.BinaryInv);   //3
+        Cv2.FindContours(processImage, out contours, out hierachy, RetrievalModes.Tree, ContourApproximationModes.ApproxSimple, null);  //4
 
         PolygonCollider.pathCount = 0;
 
         foreach (Point[] contour in contours)
         {
-            Point[] points = Cv2.ApproxPolyDP(contour, CurvedAccuracy, true);
-            var area = Cv2.ContourArea(contour);
+            Point[] points = Cv2.ApproxPolyDP(contour, CurvedAccuracy, true); //5
+            var area = Cv2.ContourArea(contour);  //6
 
             if (area > MinArea)
             {
@@ -75,7 +77,7 @@ public class FoundObjects : WebCamera
     {
         for (int i = 1; i < Points.Length; i++)
         {
-            Cv2.Line(Image, Points[i -1], Points[i], Color, Thickness);
+            Cv2.Line(Image, Points[i -1], Points[i], Color, Thickness);  // 7
         }
 
         Cv2.Line(Image, Points[Points.Length - 1], Points[0], Color, Thickness); //from last point in arr to first point in arr
